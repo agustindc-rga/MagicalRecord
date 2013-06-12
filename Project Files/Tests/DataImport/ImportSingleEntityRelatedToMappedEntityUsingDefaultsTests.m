@@ -23,7 +23,7 @@
 
 - (void) setupTestData
 {
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    NSManagedObjectContext *context = [NSManagedObjectContext defaultContext];
     
     MappedEntity *testMappedEntity = [MappedEntity createInContext:context];
     testMappedEntity.mappedEntityIDValue = 42;
@@ -32,14 +32,14 @@
     SingleEntityRelatedToMappedEntityUsingDefaults *entity = [SingleEntityRelatedToMappedEntityUsingDefaults createInContext:context];
     entity.singleEntityRelatedToMappedEntityUsingDefaultsIDValue = 24;
     
-    [context MR_saveToPersistentStoreAndWait];
+    [context saveToPersistentStoreAndWait];
 }
 
 - (void) testImportMappedEntityViaToOneRelationship
 {
-    SingleEntityRelatedToMappedEntityUsingDefaults *entity = [[self testEntityClass] MR_importFromObject:self.testEntityData];
+    SingleEntityRelatedToMappedEntityUsingDefaults *entity = [[self testEntityClass] importFromObject:self.testEntityData];
     
-    [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    [[NSManagedObjectContext defaultContext] saveToPersistentStoreAndWait];
 
     id testRelatedEntity = entity.mappedEntity;
     
@@ -54,7 +54,7 @@
 //    SingleEntityRelatedToMappedEntityUsingDefaults *testEntity = 
 //    [SingleEntityRelatedToMappedEntityUsingDefaults findFirstByAttribute:@"singleEntityRelatedToMappedEntityUsingDefaultsID" withValue:[NSNumber numberWithInt:24]];
 //    
-//    [testEntity MR_updateValuesForKeysWithObject:self.testEntityData];
+//    [testEntity updateValuesForKeysWithObject:self.testEntityData];
 //    
 //    assertThat([MappedEntity numberOfEntities], is(equalToInteger(1)));
 //    

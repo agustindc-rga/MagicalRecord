@@ -11,15 +11,10 @@
     #import <CoreFoundation/CoreFoundation.h>
     #import <CoreData/CoreData.h>
 
-    #ifdef MR_SHORTHAND
-    #import "MagicalRecordShorthand.h"
-    #endif
-
     #import "MagicalRecord.h"
     #import "MagicalRecord+Actions.h"
     #import "MagicalRecord+ErrorHandling.h"
     #import "MagicalRecord+Options.h"
-    #import "MagicalRecord+ShorthandSupport.h"
     #import "MagicalRecord+Setup.h"
     #import "MagicalRecord+iCloud.h"
 

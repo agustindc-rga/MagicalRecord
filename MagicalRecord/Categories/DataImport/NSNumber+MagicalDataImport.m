@@ -12,12 +12,12 @@
 
 @implementation NSNumber (MagicalRecord_DataImport)
 
-- (id) MR_relatedValueForRelationship:(NSRelationshipDescription *)relationshipInfo
+- (id) relatedValueForRelationship:(NSRelationshipDescription *)relationshipInfo
 {
     return self;
 }
 
-- (NSString *) MR_lookupKeyForAttribute:(NSAttributeDescription *)attributeInfo
+- (NSString *) lookupKeyForAttribute:(NSAttributeDescription *)attributeInfo
 {
     return nil;
 }

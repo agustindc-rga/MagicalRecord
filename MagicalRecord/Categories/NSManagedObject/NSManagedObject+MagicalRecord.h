@@ -11,40 +11,40 @@
 
 @interface NSManagedObject (MagicalRecord)
 
-+ (NSUInteger) MR_defaultBatchSize;
-+ (void) MR_setDefaultBatchSize:(NSUInteger)newBatchSize;
++ (NSUInteger) defaultBatchSize;
++ (void) setDefaultBatchSize:(NSUInteger)newBatchSize;
 
-+ (NSArray *) MR_executeFetchRequest:(NSFetchRequest *)request;
-+ (NSArray *) MR_executeFetchRequest:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context;
-+ (id) MR_executeFetchRequestAndReturnFirstObject:(NSFetchRequest *)request;
-+ (id) MR_executeFetchRequestAndReturnFirstObject:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context;
++ (NSArray *) executeFetchRequest:(NSFetchRequest *)request;
++ (NSArray *) executeFetchRequest:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context;
++ (id) executeFetchRequestAndReturnFirstObject:(NSFetchRequest *)request;
++ (id) executeFetchRequestAndReturnFirstObject:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context;
 
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 
-+ (void) MR_performFetch:(NSFetchedResultsController *)controller;
++ (void) performFetch:(NSFetchedResultsController *)controller;
 
 #endif
 
-+ (NSEntityDescription *) MR_entityDescription;
-+ (NSEntityDescription *) MR_entityDescriptionInContext:(NSManagedObjectContext *)context;
-+ (NSArray *) MR_propertiesNamed:(NSArray *)properties;
++ (NSEntityDescription *) entityDescription;
++ (NSEntityDescription *) entityDescriptionInContext:(NSManagedObjectContext *)context;
++ (NSArray *) propertiesNamed:(NSArray *)properties;
 
-+ (id) MR_createEntity;
-+ (id) MR_createInContext:(NSManagedObjectContext *)context;
-- (BOOL) MR_deleteEntity;
-- (BOOL) MR_deleteInContext:(NSManagedObjectContext *)context;
++ (id) createEntity;
++ (id) createInContext:(NSManagedObjectContext *)context;
+- (BOOL) deleteEntity;
+- (BOOL) deleteInContext:(NSManagedObjectContext *)context;
 
-+ (BOOL) MR_deleteAllMatchingPredicate:(NSPredicate *)predicate;
-+ (BOOL) MR_deleteAllMatchingPredicate:(NSPredicate *)predicate inContext:(NSManagedObjectContext *)context;
++ (BOOL) deleteAllMatchingPredicate:(NSPredicate *)predicate;
++ (BOOL) deleteAllMatchingPredicate:(NSPredicate *)predicate inContext:(NSManagedObjectContext *)context;
 
-+ (BOOL) MR_truncateAll;
-+ (BOOL) MR_truncateAllInContext:(NSManagedObjectContext *)context;
++ (BOOL) truncateAll;
++ (BOOL) truncateAllInContext:(NSManagedObjectContext *)context;
 
-+ (NSArray *) MR_ascendingSortDescriptors:(NSArray *)attributesToSortBy;
-+ (NSArray *) MR_descendingSortDescriptors:(NSArray *)attributesToSortBy;
++ (NSArray *) ascendingSortDescriptors:(NSArray *)attributesToSortBy;
++ (NSArray *) descendingSortDescriptors:(NSArray *)attributesToSortBy;
 
-- (id) MR_inContext:(NSManagedObjectContext *)otherContext;
-- (id) MR_inThreadContext;
+- (id) inContext:(NSManagedObjectContext *)otherContext;
+- (id) inThreadContext;
 
 @end
 

@@ -14,16 +14,16 @@ static NSString const * kMagicalRecordManagedObjectContextKey = @"MagicalRecord_
 
 @implementation NSManagedObjectContext (MagicalThreading)
 
-+ (void)MR_resetContextForCurrentThread
++ (void)resetContextForCurrentThread
 {
-    [[NSManagedObjectContext MR_contextForCurrentThread] reset];
+    [[NSManagedObjectContext contextForCurrentThread] reset];
 }
 
-+ (NSManagedObjectContext *) MR_contextForCurrentThread;
++ (NSManagedObjectContext *) contextForCurrentThread;
 {
 	if ([NSThread isMainThread])
 	{
-		return [self MR_defaultContext];
+		return [self defaultContext];
 	}
 	else
 	{
@@ -31,7 +31,7 @@ static NSString const * kMagicalRecordManagedObjectContextKey = @"MagicalRecord_
 		NSManagedObjectContext *threadContext = [threadDict objectForKey:kMagicalRecordManagedObjectContextKey];
 		if (threadContext == nil)
 		{
-			threadContext = [self MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+			threadContext = [self contextWithParent:[NSManagedObjectContext defaultContext]];
 			[threadDict setObject:threadContext forKey:kMagicalRecordManagedObjectContextKey];
 		}
 		return threadContext;

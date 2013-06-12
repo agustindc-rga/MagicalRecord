@@ -11,7 +11,7 @@
 
 @implementation NSString (MagicalRecord_DataImport)
 
-- (NSString *) MR_capitalizedFirstCharacterString;
+- (NSString *) capitalizedFirstCharacterString;
 {
     if ([self length] > 0)
     {
@@ -21,12 +21,12 @@
     return self;
 }
 
-- (id) MR_relatedValueForRelationship:(NSRelationshipDescription *)relationshipInfo
+- (id) relatedValueForRelationship:(NSRelationshipDescription *)relationshipInfo
 {
     return self;
 }
 
-- (NSString *) MR_lookupKeyForAttribute:(NSAttributeDescription *)attributeInfo
+- (NSString *) lookupKeyForAttribute:(NSAttributeDescription *)attributeInfo
 {
     return nil;
 }

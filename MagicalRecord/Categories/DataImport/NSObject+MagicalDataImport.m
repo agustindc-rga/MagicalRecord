@@ -17,12 +17,12 @@ NSUInteger const kMagicalRecordImportMaximumAttributeFailoverDepth = 10;
 @implementation NSObject (MagicalRecord_DataImport)
 
 //#warning If you implement valueForUndefinedKey: in any NSObject in your code, this may be the problem if something broke
-- (id) MR_valueForUndefinedKey:(NSString *)key
+- (id) valueForUndefinedKey:(NSString *)key
 {
     return nil;
 }
 
-- (NSString *) MR_lookupKeyForAttribute:(NSAttributeDescription *)attributeInfo;
+- (NSString *) lookupKeyForAttribute:(NSAttributeDescription *)attributeInfo;
 {
     NSString *attributeName = [attributeInfo name];
     NSString *lookupKey = [[attributeInfo userInfo] valueForKey:kMagicalRecordImportAttributeKeyMapKey] ?: attributeName;
@@ -43,13 +43,13 @@ NSUInteger const kMagicalRecordImportMaximumAttributeFailoverDepth = 10;
     return value != nil ? lookupKey : nil;
 }
 
-- (id) MR_valueForAttribute:(NSAttributeDescription *)attributeInfo
+- (id) valueForAttribute:(NSAttributeDescription *)attributeInfo
 {
-    NSString *lookupKey = [self MR_lookupKeyForAttribute:attributeInfo];
+    NSString *lookupKey = [self lookupKeyForAttribute:attributeInfo];
     return lookupKey ? [self valueForKeyPath:lookupKey] : nil;
 }
 
-- (NSString *) MR_lookupKeyForRelationship:(NSRelationshipDescription *)relationshipInfo
+- (NSString *) lookupKeyForRelationship:(NSRelationshipDescription *)relationshipInfo
 {
     NSEntityDescription *destinationEntity = [relationshipInfo destinationEntity];
     if (destinationEntity == nil) 
@@ -58,7 +58,7 @@ NSUInteger const kMagicalRecordImportMaximumAttributeFailoverDepth = 10;
         return nil;
     }
     
-    NSString *primaryKeyName = [relationshipInfo MR_primaryKey];
+    NSString *primaryKeyName = [relationshipInfo primaryKey];
     
     NSAttributeDescription *primaryKeyAttribute = [[destinationEntity attributesByName] valueForKey:primaryKeyName];
     NSString *lookupKey = [[primaryKeyAttribute userInfo] valueForKey:kMagicalRecordImportAttributeKeyMapKey] ?: [primaryKeyAttribute name];
@@ -66,9 +66,9 @@ NSUInteger const kMagicalRecordImportMaximumAttributeFailoverDepth = 10;
     return lookupKey;
 }
 
-- (id) MR_relatedValueForRelationship:(NSRelationshipDescription *)relationshipInfo
+- (id) relatedValueForRelationship:(NSRelationshipDescription *)relationshipInfo
 {
-    NSString *lookupKey = [self MR_lookupKeyForRelationship:relationshipInfo];
+    NSString *lookupKey = [self lookupKeyForRelationship:relationshipInfo];
     return lookupKey ? [self valueForKeyPath:lookupKey] : nil;
 }
 

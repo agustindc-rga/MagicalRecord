@@ -20,28 +20,28 @@
 
 + (void) saveWithBlock:(void(^)(NSManagedObjectContext *localContext))block completion:(MRSaveCompletionHandler)completion;
 {
-    NSManagedObjectContext *mainContext  = [NSManagedObjectContext MR_rootSavingContext];
-    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextWithParent:mainContext];
+    NSManagedObjectContext *mainContext  = [NSManagedObjectContext rootSavingContext];
+    NSManagedObjectContext *localContext = [NSManagedObjectContext contextWithParent:mainContext];
 
     [localContext performBlock:^{
         if (block) {
             block(localContext);
         }
 
-        [localContext MR_saveWithOptions:MRSaveParentContexts completion:completion];
+        [localContext saveWithOptions:MRSaveParentContexts completion:completion];
     }];
 }
 
 + (void) saveUsingCurrentThreadContextWithBlock:(void (^)(NSManagedObjectContext *localContext))block completion:(MRSaveCompletionHandler)completion;
 {
-    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext *localContext = [NSManagedObjectContext contextForCurrentThread];
 
     [localContext performBlock:^{
         if (block) {
             block(localContext);
         }
 
-        [localContext MR_saveWithOptions:MRSaveParentContexts completion:completion];
+        [localContext saveWithOptions:MRSaveParentContexts completion:completion];
     }];
 }
 
@@ -50,28 +50,28 @@
 
 + (void) saveWithBlockAndWait:(void(^)(NSManagedObjectContext *localContext))block;
 {
-    NSManagedObjectContext *mainContext  = [NSManagedObjectContext MR_rootSavingContext];
-    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextWithParent:mainContext];
+    NSManagedObjectContext *mainContext  = [NSManagedObjectContext rootSavingContext];
+    NSManagedObjectContext *localContext = [NSManagedObjectContext contextWithParent:mainContext];
 
     [localContext performBlockAndWait:^{
         if (block) {
             block(localContext);
         }
 
-        [localContext MR_saveWithOptions:MRSaveParentContexts|MRSaveSynchronously completion:nil];
+        [localContext saveWithOptions:MRSaveParentContexts|MRSaveSynchronously completion:nil];
     }];
 }
 
 + (void) saveUsingCurrentThreadContextWithBlockAndWait:(void (^)(NSManagedObjectContext *localContext))block;
 {
-    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext *localContext = [NSManagedObjectContext contextForCurrentThread];
 
     [localContext performBlockAndWait:^{
         if (block) {
             block(localContext);
         }
 
-        [localContext MR_saveWithOptions:MRSaveParentContexts|MRSaveSynchronously completion:nil];
+        [localContext saveWithOptions:MRSaveParentContexts|MRSaveSynchronously completion:nil];
     }];
 }
 
@@ -88,8 +88,8 @@
 
 + (void) saveInBackgroundWithBlock:(void(^)(NSManagedObjectContext *localContext))block completion:(void(^)(void))completion
 {
-    NSManagedObjectContext *mainContext  = [NSManagedObjectContext MR_defaultContext];
-    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextWithParent:mainContext];
+    NSManagedObjectContext *mainContext  = [NSManagedObjectContext defaultContext];
+    NSManagedObjectContext *localContext = [NSManagedObjectContext contextWithParent:mainContext];
 
     [localContext performBlock:^{
         if (block)
@@ -97,7 +97,7 @@
             block(localContext);
         }
 
-        [localContext MR_saveToPersistentStoreAndWait];
+        [localContext saveToPersistentStoreAndWait];
 
         if (completion)
         {
@@ -108,14 +108,14 @@
 
 + (void) saveInBackgroundUsingCurrentContextWithBlock:(void (^)(NSManagedObjectContext *localContext))block completion:(void (^)(void))completion errorHandler:(void (^)(NSError *error))errorHandler;
 {
-    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext *localContext = [NSManagedObjectContext contextForCurrentThread];
 
     [localContext performBlock:^{
         if (block) {
             block(localContext);
         }
 
-        [localContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        [localContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
             if (success) {
                 if (completion) {
                     completion();

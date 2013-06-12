@@ -22,8 +22,8 @@
 
 - (void) testImportData
 {
-    SingleEntityRelatedToManyMappedEntitiesUsingMappedPrimaryKey *entity = [[self testEntityClass] MR_importFromObject:self.testEntityData];
-    [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    SingleEntityRelatedToManyMappedEntitiesUsingMappedPrimaryKey *entity = [[self testEntityClass] importFromObject:self.testEntityData];
+    [[NSManagedObjectContext defaultContext] saveToPersistentStoreAndWait];
     
     assertThat(entity, is(notNilValue()));
     assertThat(entity.mappedEntities, hasCountOf(4));
