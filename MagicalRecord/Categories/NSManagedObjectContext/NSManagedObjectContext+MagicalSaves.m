@@ -38,16 +38,24 @@
     BOOL syncSave           = ((mask & MRSaveSynchronously) == MRSaveSynchronously);
     BOOL saveParentContexts = ((mask & MRSaveParentContexts) == MRSaveParentContexts);
 
+    MRSaveCompletionHandler handleCompletion = ^(BOOL success, NSError *error) {
+        if (!completion)
+            return;
+      
+        if (syncSave) {
+            completion(success, error);
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(success, error);
+            });
+        }
+    };
+  
     if (![self hasChanges]) {
         MRLog(@"NO CHANGES IN ** %@ ** CONTEXT - NOT SAVING", [self workingName]);
 
-        if (completion)
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(NO, nil);
-            });
-        }
-        
+        handleCompletion(YES, nil);
         return;
     }
 
@@ -73,11 +81,8 @@
             if (!saved) {
                 [MagicalRecord handleErrors:error];
 
-                if (completion) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completion(saved, error);
-                    });
-                }
+                handleCompletion(saved, error);
+              
             } else {
                 // If we're the default context, save to disk too (the user expects it to persist)
                 BOOL isDefaultContext = (self == [[self class] defaultContext]);
@@ -90,17 +95,13 @@
                 else {
                     MRLog(@"→ Finished saving: %@", [self description]);
                     
-                    if (completion) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            completion(saved, error);
-                        });
-                    }
+                    handleCompletion(saved, error);
                 }
             }
         }
     };
 
-    if (YES == syncSave) {
+    if (syncSave) {
         [self performBlockAndWait:saveBlock];
     } else {
         [self performBlock:saveBlock];
