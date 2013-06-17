@@ -23,6 +23,19 @@
     [self saveWithOptions:MRSaveSynchronously completion:nil];
 }
 
+- (BOOL)saveOnlySelfAndWait:(NSError**)error
+{
+    __block BOOL success;
+    
+    [self saveWithOptions:MRSaveSynchronously completion:^(BOOL saveSuccess, NSError *saveError) {
+      
+        success = saveSuccess;
+        if (error) *error = saveError;
+    }];
+    
+    return success;
+}
+
 - (void) saveToPersistentStoreWithCompletion:(MRSaveCompletionHandler)completion;
 {
     [self saveWithOptions:MRSaveParentContexts completion:completion];
@@ -31,6 +44,19 @@
 - (void) saveToPersistentStoreAndWait;
 {
     [self saveWithOptions:MRSaveParentContexts | MRSaveSynchronously completion:nil];
+}
+
+- (BOOL) saveToPersistentStoreAndWait:(NSError**)error
+{
+    __block BOOL success;
+    
+    [self saveWithOptions:MRSaveParentContexts | MRSaveSynchronously completion:^(BOOL saveSuccess, NSError *saveError) {
+      
+          success = saveSuccess;
+          if (error) *error = saveError;
+    }];
+    
+    return success;
 }
 
 - (void)saveWithOptions:(MRSaveContextOptions)mask completion:(MRSaveCompletionHandler)completion;

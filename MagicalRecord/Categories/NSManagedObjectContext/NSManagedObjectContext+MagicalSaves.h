@@ -31,9 +31,21 @@ typedef void (^MRSaveCompletionHandler)(BOOL success, NSError *error);
 /// \discussion Executes a save on the current context's dispatch queue. This method only saves the current context, and the parent of the current context if one is set. The method will not return until the save is complete.
 - (void) saveOnlySelfAndWait;
 
+/// \brief      Synchronously save changes in the current context and it's parent
+/// \param      error  A pointer to an NSError object. You do not need to create an NSError object.
+/// \return     YES if the save succeeds, otherwise NO.
+/// \discussion Executes a save on the current context's dispatch queue. This method only saves the current context, and the parent of the current context if one is set. The method will not return until the save is complete.
+- (BOOL) saveOnlySelfAndWait:(NSError**)error;
+
 /// \brief      Synchronously save changes in the current context all the way back to the persistent store
 /// \discussion Executes saves on the current context, and any ancestors, until the changes have been persisted to the assigned persistent store. The method will not return until the save is complete.
 - (void) saveToPersistentStoreAndWait;
+
+/// \brief      Synchronously save changes in the current context all the way back to the persistent store
+/// \param      error  A pointer to an NSError object. You do not need to create an NSError object.
+/// \return     YES if the save succeeds, otherwise NO.
+/// \discussion Executes saves on the current context, and any ancestors, until the changes have been persisted to the assigned persistent store. The method will not return until the save is complete.
+- (BOOL) saveToPersistentStoreAndWait:(NSError**)error;
 
 /// \brief       Save the current context with options
 /// \param       mask        bitmasked options for the save process
