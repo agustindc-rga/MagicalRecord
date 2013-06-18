@@ -106,7 +106,8 @@
         {
             if (!saved) {
                 [MagicalRecord handleErrors:error];
-
+                [self rollback];
+              
                 handleCompletion(saved, error);
               
             } else {
