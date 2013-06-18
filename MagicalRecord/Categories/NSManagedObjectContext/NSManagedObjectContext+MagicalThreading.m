@@ -9,6 +9,7 @@
 #import "NSManagedObjectContext+MagicalThreading.h"
 #import "NSManagedObject+MagicalRecord.h"
 #import "NSManagedObjectContext+MagicalRecord.h"
+#import "NSManagedObjectContext+MagicalObserving.h"
 
 static NSString const * kMagicalRecordManagedObjectContextKey = @"MagicalRecord_NSManagedObjectContextForThreadKey";
 
@@ -16,22 +17,26 @@ static NSString const * kMagicalRecordManagedObjectContextKey = @"MagicalRecord_
 
 + (void)resetContextForCurrentThread
 {
-    [[NSManagedObjectContext contextForCurrentThread] reset];
+    [[self contextForCurrentThread] reset];
 }
 
 + (NSManagedObjectContext *) contextForCurrentThread;
 {
+  NSManagedObjectContext *defaultContext = [self defaultContext];
+  
 	if ([NSThread isMainThread])
 	{
-		return [self defaultContext];
+		return defaultContext;
 	}
 	else
 	{
 		NSMutableDictionary *threadDict = [[NSThread currentThread] threadDictionary];
 		NSManagedObjectContext *threadContext = [threadDict objectForKey:kMagicalRecordManagedObjectContextKey];
-		if (threadContext == nil)
+		if (threadContext == nil || threadContext.parentContext != defaultContext)
 		{
-			threadContext = [self contextWithParent:[NSManagedObjectContext defaultContext]];
+			threadContext = [self contextWithParent:defaultContext];
+      [threadContext observeContext:defaultContext];
+      
 			[threadDict setObject:threadContext forKey:kMagicalRecordManagedObjectContextKey];
 		}
 		return threadContext;
