@@ -3,7 +3,7 @@ default:
 	xcodebuild -target "libMagicalRecord-iOS" -configuration Release -sdk iphoneos
 	xcodebuild -target "libMagicalRecord-iOS" -configuration Release -sdk iphonesimulator
 	#BUILD_DIR="build" BUILD_STYLE="Release" sh Scripts/CombineLibs.sh
-	sh Scripts/iOSFramework.sh
+	sh Scripts/iOSFramework.sh Release
 
 # If you need to clean a specific target/configuration: $(COMMAND) -target $(TARGET) -configuration DebugOrRelease -sdk $(SDK) clean
 clean:

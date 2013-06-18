@@ -10,7 +10,14 @@ set -e
                  FRAMEWORK_NAME=MagicalRecord
                        LIB_NAME=libMagicalRecord-iOS
               FRAMEWORK_VERSION=2.2
-                     BUILD_TYPE=Release
+              	 BUILD_TYPE_IOS=Release
+                 BUILD_TYPE_SIM=Release
+
+if [ "$#" -eq 1 ]
+then
+	BUILD_TYPE_IOS=$1
+	BUILD_TYPE_SIM=$1
+fi
 
 # Where we'll put the build framework.
 # The script presumes we're in the project root
@@ -44,8 +51,8 @@ ln -s Versions/Current/$FRAMEWORK_NAME $FRAMEWORK_DIR/$FRAMEWORK_NAME
 
 # Check that this is what your static libraries
 # are called
-ARM_FILES="build/$BUILD_TYPE-iphoneos/${LIB_NAME}.a"
-I386_FILES="build/$BUILD_TYPE-iphonesimulator/${LIB_NAME}.a"
+ARM_FILES="build/$BUILD_TYPE_IOS-iphoneos/${LIB_NAME}.a"
+I386_FILES="build/$BUILD_TYPE_SIM-iphonesimulator/${LIB_NAME}.a"
 
 # The trick for creating a fully usable library is
 # to use lipo to glue the different library
