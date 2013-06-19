@@ -205,13 +205,18 @@ static NSString * const kMagicalRecordNSManagedObjectContextWorkingName = @"kNSM
 }
 
 - (void) obtainPermanentIDsBeforeSaving;
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(contextWillSave:)
-                                                 name:NSManagedObjectContextWillSaveNotification
-                                               object:self];
-    
-    
+{  
+  NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+  
+  __weak typeof(self) weakSelf = self;
+  
+  [notificationCenter addObserverForName:NSManagedObjectContextWillSaveNotification
+                                  object:self
+                                   queue:nil
+                              usingBlock:
+   ^(NSNotification *note) {
+     [weakSelf performSelector:@selector(contextWillSave:) withObject:note];
+   }];
 }
 
 - (void) contextWillSave:(NSNotification *)notification

@@ -11,7 +11,7 @@
 @interface NSManagedObjectContext (MagicalObserving)
 
 - (void) observeContext:(NSManagedObjectContext *)otherContext;
-- (void) stopObservingContext:(NSManagedObjectContext *)otherContext;
+//- (void) stopObservingContext:(NSManagedObjectContext *)otherContext;
 - (void) observeContextOnMainThread:(NSManagedObjectContext *)otherContext;
 
 - (void) observeiCloudChangesInCoordinator:(NSPersistentStoreCoordinator *)coordinator;

@@ -20,30 +20,42 @@ NSString * const kMagicalRecordDidMergeChangesFromiCloudNotification = @"kMagica
 
 - (void) observeContext:(NSManagedObjectContext *)otherContext
 {
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-	[notificationCenter addObserver:self
-                           selector:@selector(mergeChangesFromNotification:)
-                               name:NSManagedObjectContextDidSaveNotification
-                             object:otherContext];
+  NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+  
+  __weak typeof(self) weakSelf = self;
+  
+  [notificationCenter addObserverForName:NSManagedObjectContextDidSaveNotification
+                                  object:otherContext
+                                   queue:nil
+                              usingBlock:
+   ^(NSNotification *note) {
+     [weakSelf performSelector:@selector(mergeChangesFromNotification:) withObject:note];
+   }];
 }
 
 - (void) observeContextOnMainThread:(NSManagedObjectContext *)otherContext
 {
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-	[notificationCenter addObserver:self
-                           selector:@selector(mergeChangesOnMainThread:)
-                               name:NSManagedObjectContextDidSaveNotification
-                             object:otherContext];
+  
+  __weak typeof(self) weakSelf = self;
+  
+  [notificationCenter addObserverForName:NSManagedObjectContextDidSaveNotification
+                                  object:otherContext
+                                   queue:nil
+                              usingBlock:
+   ^(NSNotification *note) {
+     [weakSelf performSelector:@selector(mergeChangesOnMainThread:) withObject:note];
+   }];
 }
 
-- (void) stopObservingContext:(NSManagedObjectContext *)otherContext
-{
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-
-	[notificationCenter removeObserver:self
-                                  name:NSManagedObjectContextDidSaveNotification
-                                object:otherContext];
-}
+//- (void) stopObservingContext:(NSManagedObjectContext *)otherContext
+//{
+//  NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+//  
+//	[notificationCenter removeObserver:self
+//                                name:NSManagedObjectContextDidSaveNotification
+//                              object:otherContext];
+//}
 
 #pragma mark - Context iCloud Merge Helpers
 
