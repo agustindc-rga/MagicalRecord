@@ -20,12 +20,12 @@
 
 - (void) setUpClass
 {
-    [NSManagedObjectModel MR_setDefaultManagedObjectModel:[NSManagedObjectModel MR_managedObjectModelNamed:@"TestModel.momd"]];
+    [NSManagedObjectModel setDefaultManagedObjectModel:[NSManagedObjectModel managedObjectModelNamed:@"TestModel.momd"]];
     [MagicalRecord setupCoreDataStackWithInMemoryStore];
 
     id singleEntity = [self dataFromJSONFixture];
     
-    testEntity = [SingleEntityWithNoRelationships MR_importFromObject:singleEntity];
+    testEntity = [SingleEntityWithNoRelationships importFromObject:singleEntity];
 }
 
 - (void) tearDownClass

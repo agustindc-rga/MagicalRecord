@@ -9,7 +9,7 @@
 
 @interface NSEntityDescription (MagicalRecord_DataImport)
 
-- (NSAttributeDescription *) MR_primaryAttributeToRelateBy;
-- (NSManagedObject *) MR_createInstanceInContext:(NSManagedObjectContext *)context;
+- (NSAttributeDescription *) primaryAttributeToRelateBy;
+- (NSManagedObject *) createInstanceInContext:(NSManagedObjectContext *)context;
 
 @end

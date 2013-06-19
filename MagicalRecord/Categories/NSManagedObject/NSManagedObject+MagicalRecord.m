@@ -10,7 +10,7 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 
 @implementation NSManagedObject (MagicalRecord)
 
-+ (void) MR_setDefaultBatchSize:(NSUInteger)newBatchSize
++ (void) setDefaultBatchSize:(NSUInteger)newBatchSize
 {
 	@synchronized(self)
 	{
@@ -18,12 +18,12 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 	}
 }
 
-+ (NSUInteger) MR_defaultBatchSize
++ (NSUInteger) defaultBatchSize
 {
 	return defaultBatchSize;
 }
 
-+ (NSArray *) MR_executeFetchRequest:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context
++ (NSArray *) executeFetchRequest:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context
 {
     __block NSArray *results = nil;
     [context performBlockAndWait:^{
@@ -41,16 +41,16 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 	return results;	
 }
 
-+ (NSArray *) MR_executeFetchRequest:(NSFetchRequest *)request
++ (NSArray *) executeFetchRequest:(NSFetchRequest *)request
 {
-	return [self MR_executeFetchRequest:request inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+	return [self executeFetchRequest:request inContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
-+ (id) MR_executeFetchRequestAndReturnFirstObject:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context
++ (id) executeFetchRequestAndReturnFirstObject:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context
 {
 	[request setFetchLimit:1];
 	
-	NSArray *results = [self MR_executeFetchRequest:request inContext:context];
+	NSArray *results = [self executeFetchRequest:request inContext:context];
 	if ([results count] == 0)
 	{
 		return nil;
@@ -58,14 +58,14 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 	return [results objectAtIndex:0];
 }
 
-+ (id) MR_executeFetchRequestAndReturnFirstObject:(NSFetchRequest *)request
++ (id) executeFetchRequestAndReturnFirstObject:(NSFetchRequest *)request
 {
-	return [self MR_executeFetchRequestAndReturnFirstObject:request inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+	return [self executeFetchRequestAndReturnFirstObject:request inContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
 #if TARGET_OS_IPHONE
 
-+ (void) MR_performFetch:(NSFetchedResultsController *)controller
++ (void) performFetch:(NSFetchedResultsController *)controller
 {
 	NSError *error = nil;
 	if (![controller performFetch:&error])
@@ -76,12 +76,12 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 
 #endif
 
-+ (NSString *) MR_entityName
++ (NSString *) entityName
 {
     return NSStringFromClass(self);
 }
 
-+ (NSEntityDescription *) MR_entityDescriptionInContext:(NSManagedObjectContext *)context
++ (NSEntityDescription *) entityDescriptionInContext:(NSManagedObjectContext *)context
 {
     if ([self respondsToSelector:@selector(entityInManagedObjectContext:)]) 
     {
@@ -90,19 +90,19 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
     }
     else
     {
-        NSString *entityName = [self MR_entityName];
+        NSString *entityName = [self entityName];
         return [NSEntityDescription entityForName:entityName inManagedObjectContext:context];
     }
 }
 
-+ (NSEntityDescription *) MR_entityDescription
++ (NSEntityDescription *) entityDescription
 {
-	return [self MR_entityDescriptionInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+	return [self entityDescriptionInContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
-+ (NSArray *) MR_propertiesNamed:(NSArray *)properties
++ (NSArray *) propertiesNamed:(NSArray *)properties
 {
-	NSEntityDescription *description = [self MR_entityDescription];
+	NSEntityDescription *description = [self entityDescription];
 	NSMutableArray *propertiesWanted = [NSMutableArray array];
 	
 	if (properties)
@@ -125,7 +125,7 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 	return propertiesWanted;
 }
 
-+ (NSArray *) MR_sortAscending:(BOOL)ascending attributes:(NSArray *)attributesToSortBy
++ (NSArray *) sortAscending:(BOOL)ascending attributes:(NSArray *)attributesToSortBy
 {
 	NSMutableArray *attributes = [NSMutableArray array];
     
@@ -138,19 +138,19 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 	return attributes;
 }
 
-+ (NSArray *) MR_ascendingSortDescriptors:(NSArray *)attributesToSortBy
++ (NSArray *) ascendingSortDescriptors:(NSArray *)attributesToSortBy
 {
-	return [self MR_sortAscending:YES attributes:attributesToSortBy];
+	return [self sortAscending:YES attributes:attributesToSortBy];
 }
 
-+ (NSArray *) MR_descendingSortDescriptors:(NSArray *)attributesToSortBy
++ (NSArray *) descendingSortDescriptors:(NSArray *)attributesToSortBy
 {
-	return [self MR_sortAscending:NO attributes:attributesToSortBy];
+	return [self sortAscending:NO attributes:attributesToSortBy];
 }
 
 #pragma mark -
 
-+ (id) MR_createInContext:(NSManagedObjectContext *)context
++ (id) createInContext:(NSManagedObjectContext *)context
 {
     if ([self respondsToSelector:@selector(insertInManagedObjectContext:)]) 
     {
@@ -159,67 +159,67 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
     }
     else
     {
-        return [NSEntityDescription insertNewObjectForEntityForName:[self MR_entityName] inManagedObjectContext:context];
+        return [NSEntityDescription insertNewObjectForEntityForName:[self entityName] inManagedObjectContext:context];
     }
 }
 
-+ (id) MR_createEntity
++ (id) createEntity
 {	
-	NSManagedObject *newEntity = [self MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+	NSManagedObject *newEntity = [self createInContext:[NSManagedObjectContext contextForCurrentThread]];
 
 	return newEntity;
 }
 
-- (BOOL) MR_deleteInContext:(NSManagedObjectContext *)context
+- (BOOL) deleteInContext:(NSManagedObjectContext *)context
 {
 	[context deleteObject:self];
 	return YES;
 }
 
-- (BOOL) MR_deleteEntity
+- (BOOL) deleteEntity
 {
-	[self MR_deleteInContext:[self managedObjectContext]];
+	[self deleteInContext:[self managedObjectContext]];
 	return YES;
 }
 
-+ (BOOL) MR_deleteAllMatchingPredicate:(NSPredicate *)predicate inContext:(NSManagedObjectContext *)context
++ (BOOL) deleteAllMatchingPredicate:(NSPredicate *)predicate inContext:(NSManagedObjectContext *)context
 {
-    NSFetchRequest *request = [self MR_requestAllWithPredicate:predicate inContext:context];
+    NSFetchRequest *request = [self requestAllWithPredicate:predicate inContext:context];
     [request setReturnsObjectsAsFaults:YES];
 	[request setIncludesPropertyValues:NO];
     
-	NSArray *objectsToTruncate = [self MR_executeFetchRequest:request inContext:context];
+	NSArray *objectsToTruncate = [self executeFetchRequest:request inContext:context];
     
 	for (id objectToTruncate in objectsToTruncate) 
     {
-		[objectToTruncate MR_deleteInContext:context];
+		[objectToTruncate deleteInContext:context];
 	}
     
 	return YES;
 }
 
-+ (BOOL) MR_deleteAllMatchingPredicate:(NSPredicate *)predicate
++ (BOOL) deleteAllMatchingPredicate:(NSPredicate *)predicate
 {
-    return [self MR_deleteAllMatchingPredicate:predicate inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [self deleteAllMatchingPredicate:predicate inContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
-+ (BOOL) MR_truncateAllInContext:(NSManagedObjectContext *)context
++ (BOOL) truncateAllInContext:(NSManagedObjectContext *)context
 {
-    NSArray *allEntities = [self MR_findAllInContext:context];
+    NSArray *allEntities = [self findAllInContext:context];
     for (NSManagedObject *obj in allEntities)
     {
-        [obj MR_deleteInContext:context];
+        [obj deleteInContext:context];
     }
     return YES;
 }
 
-+ (BOOL) MR_truncateAll
++ (BOOL) truncateAll
 {
-    [self MR_truncateAllInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    [self truncateAllInContext:[NSManagedObjectContext contextForCurrentThread]];
     return YES;
 }
 
-- (id) MR_inContext:(NSManagedObjectContext *)otherContext
+- (id) inContext:(NSManagedObjectContext *)otherContext
 {
     NSError *error = nil;
     NSManagedObject *inContext = [otherContext existingObjectWithID:[self objectID] error:&error];
@@ -228,10 +228,10 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
     return inContext;
 }
 
-- (id) MR_inThreadContext
+- (id) inThreadContext
 {
     NSManagedObject *weakSelf = self;
-    return [weakSelf MR_inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [weakSelf inContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
 @end

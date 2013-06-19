@@ -11,20 +11,20 @@ extern NSString * const kMagicalRecordDidMergeChangesFromiCloudNotification;
 
 @interface NSManagedObjectContext (MagicalRecord)
 
-+ (void) MR_initializeDefaultContextWithCoordinator:(NSPersistentStoreCoordinator *)coordinator;
++ (void) initializeDefaultContextWithCoordinator:(NSPersistentStoreCoordinator *)coordinator;
 
-+ (NSManagedObjectContext *) MR_context NS_RETURNS_RETAINED;
-+ (NSManagedObjectContext *) MR_contextWithParent:(NSManagedObjectContext *)parentContext NS_RETURNS_RETAINED;
-+ (NSManagedObjectContext *) MR_newMainQueueContext NS_RETURNS_RETAINED;
-+ (NSManagedObjectContext *) MR_contextWithStoreCoordinator:(NSPersistentStoreCoordinator *)coordinator NS_RETURNS_RETAINED;
++ (NSManagedObjectContext *) context NS_RETURNS_RETAINED;
++ (NSManagedObjectContext *) contextWithParent:(NSManagedObjectContext *)parentContext NS_RETURNS_RETAINED;
++ (NSManagedObjectContext *) newMainQueueContext NS_RETURNS_RETAINED;
++ (NSManagedObjectContext *) contextWithStoreCoordinator:(NSPersistentStoreCoordinator *)coordinator NS_RETURNS_RETAINED;
 
-+ (void) MR_resetDefaultContext;
-+ (NSManagedObjectContext *) MR_rootSavingContext;
-+ (NSManagedObjectContext *) MR_defaultContext;
++ (void) resetDefaultContext;
++ (NSManagedObjectContext *) rootSavingContext;
++ (NSManagedObjectContext *) defaultContext;
 
-- (NSString *) MR_description;
-- (NSString *) MR_parentChain;
+- (NSString *) description;
+- (NSString *) parentChain;
 
-@property (nonatomic, copy, setter = MR_setWorkingName:) NSString *MR_workingName;
+@property (nonatomic, copy, setter = setWorkingName:) NSString *workingName;
 
 @end

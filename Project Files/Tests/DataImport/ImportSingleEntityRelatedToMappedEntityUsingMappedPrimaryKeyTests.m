@@ -18,13 +18,13 @@
 
 - (void) setupTestData
 {
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    NSManagedObjectContext *context = [NSManagedObjectContext defaultContext];
     
     MappedEntity *testMappedEntity = [MappedEntity createInContext:context];
     testMappedEntity.testMappedEntityIDValue = 42;
     testMappedEntity.sampleAttribute = @"This attribute created as part of the test case setup";
     
-    [context MR_saveToPersistentStoreAndWait];
+    [context saveToPersistentStoreAndWait];
 }
 
 - (Class) testEntityClass
@@ -34,8 +34,8 @@
 
 - (void) testImportMappedEntityRelatedViaToOneRelationship
 {
-    SingleEntityRelatedToMappedEntityUsingMappedPrimaryKey *entity = [[self testEntityClass] MR_importFromObject:self.testEntityData];
-    [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    SingleEntityRelatedToMappedEntityUsingMappedPrimaryKey *entity = [[self testEntityClass] importFromObject:self.testEntityData];
+    [[NSManagedObjectContext defaultContext] saveToPersistentStoreAndWait];
     
     id testRelatedEntity = entity.mappedEntity;
     
@@ -53,8 +53,8 @@
 //- (void) testUpdateMappedEntityRelatedViaToOneRelationship
 //{
 //    SingleEntityRelatedToMappedEntityUsingMappedPrimaryKey *entity = [SingleEntityRelatedToMappedEntityUsingMappedPrimaryKey createEntity];
-//    [entity MR_updateValuesForKeysWithObject:self.testEntityData];
-//    [[NSManagedObjectContext MR_defaultContext] MR_save];
+//    [entity updateValuesForKeysWithObject:self.testEntityData];
+//    [[NSManagedObjectContext defaultContext] save];
 //    
 //    id testRelatedEntity = entity.mappedEntity;
 //    
@@ -71,8 +71,8 @@
 
 - (void) testImportMappedEntityUsingPrimaryRelationshipKey
 {
-    SingleEntityRelatedToMappedEntityUsingMappedPrimaryKey *entity = [[self testEntityClass] MR_importFromObject:self.testEntityData];
-    [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    SingleEntityRelatedToMappedEntityUsingMappedPrimaryKey *entity = [[self testEntityClass] importFromObject:self.testEntityData];
+    [[NSManagedObjectContext defaultContext] saveToPersistentStoreAndWait];
     
     id testRelatedEntity = entity.mappedEntity;
     
@@ -90,8 +90,8 @@
 //- (void) testUpdateMappedEntityUsingPrimaryRelationshipKey
 //{
 //    SingleEntityRelatedToMappedEntityUsingMappedPrimaryKey *entity = [SingleEntityRelatedToMappedEntityUsingMappedPrimaryKey createEntity];
-//    [entity MR_updateValuesForKeysWithObject:self.testEntityData];
-//    [[NSManagedObjectContext MR_defaultContext] MR_save];
+//    [entity updateValuesForKeysWithObject:self.testEntityData];
+//    [[NSManagedObjectContext defaultContext] save];
 //    
 //    id testRelatedEntity = entity.mappedEntity;
 //    

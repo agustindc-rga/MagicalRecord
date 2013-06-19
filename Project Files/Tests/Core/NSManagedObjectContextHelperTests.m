@@ -22,25 +22,25 @@
 
 - (void) testCanCreateContextForCurrentThead
 {
-    NSManagedObjectContext *firstContext = [NSManagedObjectContext MR_contextForCurrentThread];
-    NSManagedObjectContext *secondContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext *firstContext = [NSManagedObjectContext contextForCurrentThread];
+    NSManagedObjectContext *secondContext = [NSManagedObjectContext contextForCurrentThread];
     
     assertThat(firstContext, is(equalTo(secondContext)));
 }
 
 - (void) testCanNotifyDefaultContextOnSave
 {
-    NSManagedObjectContext *testContext = [NSManagedObjectContext MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+    NSManagedObjectContext *testContext = [NSManagedObjectContext contextWithParent:[NSManagedObjectContext defaultContext]];
 
-   assertThat([testContext parentContext], is(equalTo([NSManagedObjectContext MR_defaultContext])));
+   assertThat([testContext parentContext], is(equalTo([NSManagedObjectContext defaultContext])));
 }
 
 - (void) testThatSavedObjectsHavePermanentIDs
 {
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-    SingleEntityWithNoRelationships *entity = [SingleEntityWithNoRelationships MR_createInContext:context];
+    NSManagedObjectContext *context = [NSManagedObjectContext defaultContext];
+    SingleEntityWithNoRelationships *entity = [SingleEntityWithNoRelationships createInContext:context];
     assertThatBool([[entity objectID] isTemporaryID], equalToBool(YES));
-    [context MR_saveOnlySelfAndWait];
+    [context saveOnlySelfAndWait];
     assertThatBool([[entity objectID] isTemporaryID], equalToBool(NO));
 }
 

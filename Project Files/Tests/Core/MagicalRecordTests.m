@@ -29,10 +29,10 @@
 
 - (void) assertDefaultStack
 {
-    assertThat([NSManagedObjectContext MR_defaultContext], is(notNilValue()));
-    assertThat([NSManagedObjectModel MR_defaultManagedObjectModel], is(notNilValue()));
-    assertThat([NSPersistentStoreCoordinator MR_defaultStoreCoordinator], is(notNilValue()));
-    assertThat([NSPersistentStore MR_defaultPersistentStore], is(notNilValue()));    
+    assertThat([NSManagedObjectContext defaultContext], is(notNilValue()));
+    assertThat([NSManagedObjectModel defaultManagedObjectModel], is(notNilValue()));
+    assertThat([NSPersistentStoreCoordinator defaultStoreCoordinator], is(notNilValue()));
+    assertThat([NSPersistentStore defaultPersistentStore], is(notNilValue()));    
 }
 
 - (void) testCreateDefaultCoreDataStack
@@ -44,7 +44,7 @@
     
     [self assertDefaultStack];
     
-    NSPersistentStore *defaultStore = [NSPersistentStore MR_defaultPersistentStore];
+    NSPersistentStore *defaultStore = [NSPersistentStore defaultPersistentStore];
     assertThat([[defaultStore URL] absoluteString], endsWith(@".sqlite"));
     assertThat([defaultStore type], is(equalTo(NSSQLiteStoreType)));
 }
@@ -55,7 +55,7 @@
     
     [self assertDefaultStack];
     
-    NSPersistentStore *defaultStore = [NSPersistentStore MR_defaultPersistentStore];
+    NSPersistentStore *defaultStore = [NSPersistentStore defaultPersistentStore];
     assertThat([defaultStore type], is(equalTo(NSInMemoryStoreType)));
 }
 
@@ -63,14 +63,14 @@
 {
     NSString *testStoreName = @"MyTestDataStore.sqlite";
     
-    NSURL *testStoreURL = [NSPersistentStore MR_urlForStoreName:testStoreName];
+    NSURL *testStoreURL = [NSPersistentStore urlForStoreName:testStoreName];
     [[NSFileManager defaultManager] removeItemAtPath:[testStoreURL path] error:nil];
     
     [MagicalRecord setupCoreDataStackWithStoreNamed:testStoreName];
     
     [self assertDefaultStack];
     
-    NSPersistentStore *defaultStore = [NSPersistentStore MR_defaultPersistentStore];
+    NSPersistentStore *defaultStore = [NSPersistentStore defaultPersistentStore];
     assertThat([defaultStore type], is(equalTo(NSSQLiteStoreType)));
     assertThat([[defaultStore URL] absoluteString], endsWith(testStoreName));
 }

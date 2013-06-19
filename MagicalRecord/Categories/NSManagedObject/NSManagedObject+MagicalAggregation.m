@@ -19,51 +19,51 @@
 #pragma mark -
 #pragma mark Number of Entities
 
-+ (NSNumber *) MR_numberOfEntitiesWithContext:(NSManagedObjectContext *)context
++ (NSNumber *) numberOfEntitiesWithContext:(NSManagedObjectContext *)context
 {
-	return [NSNumber numberWithUnsignedInteger:[self MR_countOfEntitiesWithContext:context]];
+	return [NSNumber numberWithUnsignedInteger:[self countOfEntitiesWithContext:context]];
 }
 
-+ (NSNumber *) MR_numberOfEntities
++ (NSNumber *) numberOfEntities
 {
-	return [self MR_numberOfEntitiesWithContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+	return [self numberOfEntitiesWithContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
-+ (NSNumber *) MR_numberOfEntitiesWithPredicate:(NSPredicate *)searchTerm inContext:(NSManagedObjectContext *)context
++ (NSNumber *) numberOfEntitiesWithPredicate:(NSPredicate *)searchTerm inContext:(NSManagedObjectContext *)context
 {
     
-	return [NSNumber numberWithUnsignedInteger:[self MR_countOfEntitiesWithPredicate:searchTerm inContext:context]];
+	return [NSNumber numberWithUnsignedInteger:[self countOfEntitiesWithPredicate:searchTerm inContext:context]];
 }
 
-+ (NSNumber *) MR_numberOfEntitiesWithPredicate:(NSPredicate *)searchTerm;
++ (NSNumber *) numberOfEntitiesWithPredicate:(NSPredicate *)searchTerm;
 {
-	return [self MR_numberOfEntitiesWithPredicate:searchTerm
-                                        inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+	return [self numberOfEntitiesWithPredicate:searchTerm
+                                        inContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
-+ (NSUInteger) MR_countOfEntities;
++ (NSUInteger) countOfEntities;
 {
-    return [self MR_countOfEntitiesWithContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [self countOfEntitiesWithContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
-+ (NSUInteger) MR_countOfEntitiesWithContext:(NSManagedObjectContext *)context;
++ (NSUInteger) countOfEntitiesWithContext:(NSManagedObjectContext *)context;
 {
 	NSError *error = nil;
-	NSUInteger count = [context countForFetchRequest:[self MR_createFetchRequestInContext:context] error:&error];
+	NSUInteger count = [context countForFetchRequest:[self createFetchRequestInContext:context] error:&error];
 	[MagicalRecord handleErrors:error];
 	
     return count;
 }
 
-+ (NSUInteger) MR_countOfEntitiesWithPredicate:(NSPredicate *)searchFilter;
++ (NSUInteger) countOfEntitiesWithPredicate:(NSPredicate *)searchFilter;
 {
-    return [self MR_countOfEntitiesWithPredicate:searchFilter inContext:[NSManagedObjectContext MR_defaultContext]];
+    return [self countOfEntitiesWithPredicate:searchFilter inContext:[NSManagedObjectContext defaultContext]];
 }
 
-+ (NSUInteger) MR_countOfEntitiesWithPredicate:(NSPredicate *)searchFilter inContext:(NSManagedObjectContext *)context;
++ (NSUInteger) countOfEntitiesWithPredicate:(NSPredicate *)searchFilter inContext:(NSManagedObjectContext *)context;
 {
 	NSError *error = nil;
-	NSFetchRequest *request = [self MR_createFetchRequestInContext:context];
+	NSFetchRequest *request = [self createFetchRequestInContext:context];
 	[request setPredicate:searchFilter];
 	
 	NSUInteger count = [context countForFetchRequest:request error:&error];
@@ -72,40 +72,40 @@
     return count;
 }
 
-+ (BOOL) MR_hasAtLeastOneEntity
++ (BOOL) hasAtLeastOneEntity
 {
-    return [self MR_hasAtLeastOneEntityInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [self hasAtLeastOneEntityInContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
-+ (BOOL) MR_hasAtLeastOneEntityInContext:(NSManagedObjectContext *)context
++ (BOOL) hasAtLeastOneEntityInContext:(NSManagedObjectContext *)context
 {
-    return [[self MR_numberOfEntitiesWithContext:context] intValue] > 0;
+    return [[self numberOfEntitiesWithContext:context] intValue] > 0;
 }
 
-- (NSNumber *) MR_maxValueFor:(NSString *)property
+- (NSNumber *) maxValueFor:(NSString *)property
 {
-	NSManagedObject *obj = [[self class] MR_findFirstByAttribute:property
+	NSManagedObject *obj = [[self class] findFirstByAttribute:property
                                                        withValue:[NSString stringWithFormat:@"max(%@)", property]];
 	
 	return [obj valueForKey:property];
 }
 
-- (id) MR_objectWithMinValueFor:(NSString *)property inContext:(NSManagedObjectContext *)context
+- (id) objectWithMinValueFor:(NSString *)property inContext:(NSManagedObjectContext *)context
 {
-	NSFetchRequest *request = [[self class] MR_createFetchRequestInContext:context];
+	NSFetchRequest *request = [[self class] createFetchRequestInContext:context];
     
 	NSPredicate *searchFor = [NSPredicate predicateWithFormat:@"SELF = %@ AND %K = min(%@)", self, property, property];
 	[request setPredicate:searchFor];
 	
-	return [[self class] MR_executeFetchRequestAndReturnFirstObject:request inContext:context];
+	return [[self class] executeFetchRequestAndReturnFirstObject:request inContext:context];
 }
 
-- (id) MR_objectWithMinValueFor:(NSString *)property
+- (id) objectWithMinValueFor:(NSString *)property
 {
-	return [self MR_objectWithMinValueFor:property inContext:[self  managedObjectContext]];
+	return [self objectWithMinValueFor:property inContext:[self  managedObjectContext]];
 }
 
-+ (NSNumber *) MR_aggregateOperation:(NSString *)function onAttribute:(NSString *)attributeName withPredicate:(NSPredicate *)predicate inContext:(NSManagedObjectContext *)context 
++ (NSNumber *) aggregateOperation:(NSString *)function onAttribute:(NSString *)attributeName withPredicate:(NSPredicate *)predicate inContext:(NSManagedObjectContext *)context 
 {
     NSExpression *ex = [NSExpression expressionForFunction:function 
                                                  arguments:[NSArray arrayWithObject:[NSExpression expressionForKeyPath:attributeName]]];
@@ -115,26 +115,26 @@
     [ed setExpression:ex];
     
     // determine the type of attribute, required to set the expression return type    
-    NSAttributeDescription *attributeDescription = [[[self MR_entityDescription] attributesByName] objectForKey:attributeName];
+    NSAttributeDescription *attributeDescription = [[[self entityDescription] attributesByName] objectForKey:attributeName];
     [ed setExpressionResultType:[attributeDescription attributeType]];    
     NSArray *properties = [NSArray arrayWithObject:ed];
     
-    NSFetchRequest *request = [self MR_requestAllWithPredicate:predicate inContext:context];
+    NSFetchRequest *request = [self requestAllWithPredicate:predicate inContext:context];
     [request setPropertiesToFetch:properties];
     [request setResultType:NSDictionaryResultType];    
     
-    NSDictionary *resultsDictionary = [self MR_executeFetchRequestAndReturnFirstObject:request inContext:context];
+    NSDictionary *resultsDictionary = [self executeFetchRequestAndReturnFirstObject:request inContext:context];
     NSNumber *resultValue = [resultsDictionary objectForKey:@"result"];
     
     return resultValue;    
 }
 
-+ (NSNumber *) MR_aggregateOperation:(NSString *)function onAttribute:(NSString *)attributeName withPredicate:(NSPredicate *)predicate 
++ (NSNumber *) aggregateOperation:(NSString *)function onAttribute:(NSString *)attributeName withPredicate:(NSPredicate *)predicate 
 {
-    return [self MR_aggregateOperation:function 
+    return [self aggregateOperation:function 
                            onAttribute:attributeName 
                          withPredicate:predicate
-                             inContext:[NSManagedObjectContext MR_defaultContext]];    
+                             inContext:[NSManagedObjectContext defaultContext]];    
 }
 
 @end

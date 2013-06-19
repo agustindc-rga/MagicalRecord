@@ -16,7 +16,7 @@
 
 @interface NSManagedObjectContext (MagicalRecordInternal)
 
-+ (void) MR_cleanUp;
++ (void) cleanUp;
 
 @end
 
@@ -31,36 +31,36 @@
 
 + (void) cleanUpStack;
 {
-	[NSManagedObjectContext MR_cleanUp];
-	[NSManagedObjectModel MR_setDefaultManagedObjectModel:nil];
-	[NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:nil];
-	[NSPersistentStore MR_setDefaultPersistentStore:nil];
+	[NSManagedObjectContext cleanUp];
+	[NSManagedObjectModel setDefaultManagedObjectModel:nil];
+	[NSPersistentStoreCoordinator setDefaultStoreCoordinator:nil];
+	[NSPersistentStore setDefaultPersistentStore:nil];
 }
 
 + (NSString *) currentStack
 {
     NSMutableString *status = [NSMutableString stringWithString:@"Current Default Core Data Stack: ---- \n"];
 
-    [status appendFormat:@"Model:           %@\n", [[NSManagedObjectModel MR_defaultManagedObjectModel] entityVersionHashesByName]];
-    [status appendFormat:@"Coordinator:     %@\n", [NSPersistentStoreCoordinator MR_defaultStoreCoordinator]];
-    [status appendFormat:@"Store:           %@\n", [NSPersistentStore MR_defaultPersistentStore]];
-    [status appendFormat:@"Default Context: %@\n", [[NSManagedObjectContext MR_defaultContext] MR_description]];
-    [status appendFormat:@"Context Chain:   \n%@\n", [[NSManagedObjectContext MR_defaultContext] MR_parentChain]];
+    [status appendFormat:@"Model:           %@\n", [[NSManagedObjectModel defaultManagedObjectModel] entityVersionHashesByName]];
+    [status appendFormat:@"Coordinator:     %@\n", [NSPersistentStoreCoordinator defaultStoreCoordinator]];
+    [status appendFormat:@"Store:           %@\n", [NSPersistentStore defaultPersistentStore]];
+    [status appendFormat:@"Default Context: %@\n", [[NSManagedObjectContext defaultContext] description]];
+    [status appendFormat:@"Context Chain:   \n%@\n", [[NSManagedObjectContext defaultContext] parentChain]];
 
     return status;
 }
 
 + (void) setDefaultModelNamed:(NSString *)modelName;
 {
-    NSManagedObjectModel *model = [NSManagedObjectModel MR_managedObjectModelNamed:modelName];
-    [NSManagedObjectModel MR_setDefaultManagedObjectModel:model];
+    NSManagedObjectModel *model = [NSManagedObjectModel managedObjectModelNamed:modelName];
+    [NSManagedObjectModel setDefaultManagedObjectModel:model];
 }
 
 + (void) setDefaultModelFromClass:(Class)klass;
 {
     NSBundle *bundle = [NSBundle bundleForClass:klass];
     NSManagedObjectModel *model = [NSManagedObjectModel mergedModelFromBundles:[NSArray arrayWithObject:bundle]];
-    [NSManagedObjectModel MR_setDefaultManagedObjectModel:model];
+    [NSManagedObjectModel setDefaultManagedObjectModel:model];
 }
 
 + (NSString *) defaultStoreName;
@@ -85,9 +85,6 @@
 {
     if (self == [MagicalRecord class]) 
     {
-#ifdef MR_SHORTHAND
-        [self swizzleShorthandMethods];
-#endif
         [self setShouldAutoCreateManagedObjectModel:YES];
         [self setShouldAutoCreateDefaultPersistentStoreCoordinator:NO];
 #ifdef DEBUG

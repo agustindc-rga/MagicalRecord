@@ -10,7 +10,7 @@
 
 @implementation NSEntityDescription (MagicalRecord_DataImport)
 
-- (NSAttributeDescription *) MR_primaryAttributeToRelateBy;
+- (NSAttributeDescription *) primaryAttributeToRelateBy;
 {
     NSString *lookupKey = [[self userInfo] valueForKey:kMagicalRecordImportRelationshipLinkedByKey] ?: primaryKeyNameFromString([self name]);
     NSDictionary *attributesByName = [self attributesByName];
@@ -22,10 +22,10 @@
     return primaryAttribute;
 }
 
-- (NSManagedObject *) MR_createInstanceInContext:(NSManagedObjectContext *)context;
+- (NSManagedObject *) createInstanceInContext:(NSManagedObjectContext *)context;
 {
     Class relatedClass = NSClassFromString([self managedObjectClassName]);
-    NSManagedObject *newInstance = [relatedClass MR_createInContext:context];
+    NSManagedObject *newInstance = [relatedClass createInContext:context];
    
     return newInstance;
 }

@@ -10,11 +10,11 @@
 
 @interface NSManagedObjectContext (MagicalObserving)
 
-- (void) MR_observeContext:(NSManagedObjectContext *)otherContext;
-- (void) MR_stopObservingContext:(NSManagedObjectContext *)otherContext;
-- (void) MR_observeContextOnMainThread:(NSManagedObjectContext *)otherContext;
+- (void) observeContext:(NSManagedObjectContext *)otherContext;
+- (void) stopObservingContext:(NSManagedObjectContext *)otherContext;
+- (void) observeContextOnMainThread:(NSManagedObjectContext *)otherContext;
 
-- (void) MR_observeiCloudChangesInCoordinator:(NSPersistentStoreCoordinator *)coordinator;
-- (void) MR_stopObservingiCloudChangesInCoordinator:(NSPersistentStoreCoordinator *)coordinator;
+- (void) observeiCloudChangesInCoordinator:(NSPersistentStoreCoordinator *)coordinator;
+- (void) stopObservingiCloudChangesInCoordinator:(NSPersistentStoreCoordinator *)coordinator;
 
 @end

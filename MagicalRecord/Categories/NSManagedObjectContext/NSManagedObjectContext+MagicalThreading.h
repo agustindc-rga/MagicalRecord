@@ -10,7 +10,7 @@
 
 @interface NSManagedObjectContext (MagicalThreading)
 
-+ (NSManagedObjectContext *) MR_contextForCurrentThread;
-+ (void) MR_resetContextForCurrentThread;
++ (NSManagedObjectContext *) contextForCurrentThread;
++ (void) resetContextForCurrentThread;
 
 @end

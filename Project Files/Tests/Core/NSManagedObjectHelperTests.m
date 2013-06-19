@@ -13,7 +13,7 @@
 
 - (void) setUpClass
 {
-    [NSManagedObjectModel MR_setDefaultManagedObjectModel:[NSManagedObjectModel MR_managedObjectModelNamed:@"TestModel.momd"]];   
+    [NSManagedObjectModel setDefaultManagedObjectModel:[NSManagedObjectModel managedObjectModelNamed:@"TestModel.momd"]];   
 }
 
 - (void) setUp
@@ -80,11 +80,11 @@
 - (void) testCanDeleteEntityInstance
 {
     id testEntity = [SingleRelatedEntity createEntity];
-    [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    [[NSManagedObjectContext defaultContext] saveToPersistentStoreAndWait];
     
     assertThatBool([testEntity isDeleted], is(equalToBool(NO)));
     
-    [testEntity MR_deleteEntity];
+    [testEntity deleteEntity];
     
     assertThat(testEntity, is(notNilValue()));
     assertThatBool([testEntity isDeleted], is(equalToBool(YES)));
@@ -100,7 +100,7 @@
         testEntity.mappedStringAttribute = [NSString stringWithFormat:@"%d", i / 5];
     }
     
-    [[NSManagedObjectContext MR_defaultContext] MR_saveOnlySelfAndWait];
+    [[NSManagedObjectContext defaultContext] saveOnlySelfAndWait];
 }
 
 - (void) testCanSearchForNumberOfAllEntities

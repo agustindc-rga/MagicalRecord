@@ -9,29 +9,35 @@
 #import "NSManagedObjectContext+MagicalThreading.h"
 #import "NSManagedObject+MagicalRecord.h"
 #import "NSManagedObjectContext+MagicalRecord.h"
+#import "NSManagedObjectContext+MagicalObserving.h"
 
 static NSString const * kMagicalRecordManagedObjectContextKey = @"MagicalRecord_NSManagedObjectContextForThreadKey";
 
 @implementation NSManagedObjectContext (MagicalThreading)
 
-+ (void)MR_resetContextForCurrentThread
++ (void)resetContextForCurrentThread
 {
-    [[NSManagedObjectContext MR_contextForCurrentThread] reset];
+    [[self contextForCurrentThread] reset];
 }
 
-+ (NSManagedObjectContext *) MR_contextForCurrentThread;
++ (NSManagedObjectContext *) contextForCurrentThread;
 {
+  NSManagedObjectContext *defaultContext = [self defaultContext];
+  
 	if ([NSThread isMainThread])
 	{
-		return [self MR_defaultContext];
+		return defaultContext;
 	}
 	else
 	{
 		NSMutableDictionary *threadDict = [[NSThread currentThread] threadDictionary];
 		NSManagedObjectContext *threadContext = [threadDict objectForKey:kMagicalRecordManagedObjectContextKey];
-		if (threadContext == nil)
+		if (threadContext == nil || threadContext.parentContext != defaultContext)
 		{
-			threadContext = [self MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+      [threadContext stopObservingContext:threadContext.parentContext];
+			threadContext = [self contextWithParent:defaultContext];
+      [threadContext observeContext:defaultContext];
+      
 			[threadDict setObject:threadContext forKey:kMagicalRecordManagedObjectContextKey];
 		}
 		return threadContext;
