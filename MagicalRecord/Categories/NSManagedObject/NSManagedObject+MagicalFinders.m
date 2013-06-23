@@ -190,6 +190,7 @@
 	NSFetchRequest *request = [self createFetchRequestInContext:context];
 	[request setPredicate:searchTerm];
 	[request setPropertiesToFetch:attributes];
+    [request setResultType:NSDictionaryResultType];
 	
 	return [self executeFetchRequestAndReturnFirstObject:request inContext:context];
 }
@@ -208,6 +209,7 @@
                                             withPredicate:searchTerm
                                                 inContext:context];
 	[request setPropertiesToFetch:[self propertiesNamed:attributes]];
+    [request setResultType:NSDictionaryResultType];
 	
 	return [self executeFetchRequestAndReturnFirstObject:request inContext:context];
 }
