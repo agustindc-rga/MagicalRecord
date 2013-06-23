@@ -132,7 +132,6 @@
 + (id) findFirstByAttribute:(NSString *)attribute withValue:(id)searchValue inContext:(NSManagedObjectContext *)context
 {	
 	NSFetchRequest *request = [self requestFirstByAttribute:attribute withValue:searchValue inContext:context];
-    //    [request setPropertiesToFetch:[NSArray arrayWithObject:attribute]];
     
 	return [self executeFetchRequestAndReturnFirstObject:request inContext:context];
 }
@@ -202,7 +201,7 @@
                                  inContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
-+ (id) findFirstWithPredicate:(NSPredicate *)searchTerm sortedBy:(NSString *)sortBy ascending:(BOOL)ascending inContext:(NSManagedObjectContext *)context andRetrieveAttributes:(id)attributes, ...
++ (id) findFirstWithPredicate:(NSPredicate *)searchTerm sortedBy:(NSString *)sortBy ascending:(BOOL)ascending andRetrieveAttributes:(NSArray*)attributes inContext:(NSManagedObjectContext *)context
 {
 	NSFetchRequest *request = [self requestAllSortedBy:sortBy
                                                 ascending:ascending
@@ -213,13 +212,13 @@
 	return [self executeFetchRequestAndReturnFirstObject:request inContext:context];
 }
 
-+ (id) findFirstWithPredicate:(NSPredicate *)searchTerm sortedBy:(NSString *)sortBy ascending:(BOOL)ascending andRetrieveAttributes:(id)attributes, ...
++ (id) findFirstWithPredicate:(NSPredicate *)searchTerm sortedBy:(NSString *)sortBy ascending:(BOOL)ascending andRetrieveAttributes:(NSArray*)attributes
 {
 	return [self findFirstWithPredicate:searchTerm
-                                  sortedBy:sortBy 
-                                 ascending:ascending 
-                                 inContext:[NSManagedObjectContext contextForCurrentThread]
-                     andRetrieveAttributes:attributes];
+                               sortedBy:sortBy
+                              ascending:ascending
+                  andRetrieveAttributes:attributes
+                              inContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
 #pragma mark - Find All By Attribute
