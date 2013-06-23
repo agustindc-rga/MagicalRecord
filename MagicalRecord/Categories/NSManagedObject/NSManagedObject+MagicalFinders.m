@@ -13,8 +13,7 @@
 
 @implementation NSManagedObject (MagicalFinders)
 
-#pragma mark - Finding Data
-
+#pragma mark - Find All
 
 + (NSArray *) findAllInContext:(NSManagedObjectContext *)context
 {
@@ -64,15 +63,59 @@
 	NSFetchRequest *request = [self createFetchRequestInContext:context];
 	[request setPredicate:searchTerm];
 	
-	return [self executeFetchRequest:request
-                              inContext:context];
+	return [self executeFetchRequest:request inContext:context];
 }
 
 + (NSArray *) findAllWithPredicate:(NSPredicate *)searchTerm
 {
-	return [self findAllWithPredicate:searchTerm
-                               inContext:[NSManagedObjectContext contextForCurrentThread]];
+	return [self findAllWithPredicate:searchTerm inContext:[NSManagedObjectContext contextForCurrentThread]];
 }
+
+#pragma mark - Find All With Attributes
+
++ (NSArray *) findAllAndRetrieveAttributes:(NSArray*)attributes
+{
+    return [self findAllAndRetrieveAttributes:attributes inContext:[NSManagedObjectContext contextForCurrentThread]];
+}
+
++ (NSArray *) findAllAndRetrieveAttributes:(NSArray*)attributes inContext:(NSManagedObjectContext *)context
+{
+    NSFetchRequest *request = [self requestAllInContext:context];
+    [request setPropertiesToFetch:attributes];
+    [request setResultType:NSDictionaryResultType];
+    
+    return [self executeFetchRequest:request inContext:context];
+}
+
++ (NSArray *) findAllWithPredicate:(NSPredicate *)searchTerm andRetrieveAttributes:(NSArray *)attributes
+{
+    return [self findAllWithPredicate:searchTerm andRetrieveAttributes:attributes inContext:[NSManagedObjectContext contextForCurrentThread]];
+}
+
++ (NSArray *) findAllWithPredicate:(NSPredicate *)searchTerm andRetrieveAttributes:(NSArray *)attributes inContext:(NSManagedObjectContext *)context
+{
+    NSFetchRequest *request = [self requestAllWithPredicate:searchTerm inContext:context];
+    [request setPropertiesToFetch:attributes];
+    [request setResultType:NSDictionaryResultType];
+    
+    return [self executeFetchRequest:request inContext:context];
+}
+
++ (NSArray *) findByAttribute:(NSString *)attribute withValue:(id)searchValue andRetrieveAttributes:(NSArray *)attributes
+{
+    return [self findByAttribute:attribute withValue:searchValue andRetrieveAttributes:attributes inContext:[NSManagedObjectContext contextForCurrentThread]];
+}
+
++ (NSArray *) findByAttribute:(NSString *)attribute withValue:(id)searchValue andRetrieveAttributes:(NSArray *)attributes inContext:(NSManagedObjectContext *)context
+{
+    NSFetchRequest *request = [self requestAllWhere:attribute isEqualTo:searchValue inContext:context];
+    [request setPropertiesToFetch:attributes];
+    [request setResultType:NSDictionaryResultType];
+    
+    return [self executeFetchRequest:request inContext:context];
+}
+
+#pragma mark - Find First
 
 + (id) findFirstInContext:(NSManagedObjectContext *)context
 {
@@ -178,6 +221,8 @@
                                  inContext:[NSManagedObjectContext contextForCurrentThread]
                      andRetrieveAttributes:attributes];
 }
+
+#pragma mark - Find All By Attribute
 
 + (NSArray *) findByAttribute:(NSString *)attribute withValue:(id)searchValue inContext:(NSManagedObjectContext *)context
 {

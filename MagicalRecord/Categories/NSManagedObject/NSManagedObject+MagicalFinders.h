@@ -20,6 +20,13 @@
 + (NSArray *) findAllWithPredicate:(NSPredicate *)searchTerm;
 + (NSArray *) findAllWithPredicate:(NSPredicate *)searchTerm inContext:(NSManagedObjectContext *)context;
 
++ (NSArray *) findAllAndRetrieveAttributes:(NSArray*)attributes;
++ (NSArray *) findAllAndRetrieveAttributes:(NSArray*)attributes inContext:(NSManagedObjectContext *)context;
++ (NSArray *) findAllWithPredicate:(NSPredicate *)searchTerm andRetrieveAttributes:(NSArray *)attributes;
++ (NSArray *) findAllWithPredicate:(NSPredicate *)searchTerm andRetrieveAttributes:(NSArray *)attributes inContext:(NSManagedObjectContext *)context;
++ (NSArray *) findByAttribute:(NSString *)attribute withValue:(id)searchValue andRetrieveAttributes:(NSArray *)attributes;
++ (NSArray *) findByAttribute:(NSString *)attribute withValue:(id)searchValue andRetrieveAttributes:(NSArray *)attributes inContext:(NSManagedObjectContext *)context;
+
 + (id) findFirst;
 + (id) findFirstInContext:(NSManagedObjectContext *)context;
 + (id) findFirstWithPredicate:(NSPredicate *)searchTerm;
