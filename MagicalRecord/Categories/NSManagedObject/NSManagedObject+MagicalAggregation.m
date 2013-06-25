@@ -72,6 +72,17 @@
     return count;
 }
 
++ (NSUInteger) countOfEntitiesByAttribute:(NSString *)attribute withValue:(id)searchValue inContext:(NSManagedObjectContext *)context
+{
+  NSPredicate *searchTerm = [NSPredicate predicateWithFormat:@"%K = %@", attribute, searchValue];
+  return [self countOfEntitiesWithPredicate:searchTerm inContext:context];
+}
+
++ (NSUInteger) countOfEntitiesByAttribute:(NSString *)attribute withValue:(id)searchValue
+{
+  return [self countOfEntitiesByAttribute:attribute withValue:searchValue inContext:[NSManagedObjectContext contextForCurrentThread]];
+}
+
 + (BOOL) hasAtLeastOneEntity
 {
     return [self hasAtLeastOneEntityInContext:[NSManagedObjectContext contextForCurrentThread]];

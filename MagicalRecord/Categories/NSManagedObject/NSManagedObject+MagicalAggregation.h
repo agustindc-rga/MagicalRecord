@@ -19,6 +19,8 @@
 + (NSUInteger) countOfEntitiesWithContext:(NSManagedObjectContext *)context;
 + (NSUInteger) countOfEntitiesWithPredicate:(NSPredicate *)searchFilter;
 + (NSUInteger) countOfEntitiesWithPredicate:(NSPredicate *)searchFilter inContext:(NSManagedObjectContext *)context;
++ (NSUInteger) countOfEntitiesByAttribute:(NSString *)attribute withValue:(id)searchValue;
++ (NSUInteger) countOfEntitiesByAttribute:(NSString *)attribute withValue:(id)searchValue inContext:(NSManagedObjectContext *)context;
 
 + (BOOL) hasAtLeastOneEntity;
 + (BOOL) hasAtLeastOneEntityInContext:(NSManagedObjectContext *)context;
