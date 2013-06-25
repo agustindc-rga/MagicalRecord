@@ -143,6 +143,19 @@
                                inContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
++ (id) findFirstByAttribute:(NSString *)attribute withValue:(id)searchValue andRetrieveAttributes:(NSArray *)attributes inContext:(NSManagedObjectContext *)context
+{
+  NSFetchRequest *request = [self requestFirstByAttribute:attribute withValue:searchValue inContext:context];
+  [request setPropertiesToFetch:attributes];
+  [request setResultType:NSDictionaryResultType];
+  
+	return [self executeFetchRequestAndReturnFirstObject:request inContext:context];
+}
++ (id) findFirstByAttribute:(NSString *)attribute withValue:(id)searchValue andRetrieveAttributes:(NSArray *)attributes
+{
+  return [self findFirstByAttribute:attribute withValue:searchValue andRetrieveAttributes:attributes inContext:[NSManagedObjectContext contextForCurrentThread]];
+}
+
 + (id) findFirstOrderedByAttribute:(NSString *)attribute ascending:(BOOL)ascending inContext:(NSManagedObjectContext *)context;
 {
     NSFetchRequest *request = [self requestAllSortedBy:attribute ascending:ascending inContext:context];
@@ -190,7 +203,7 @@
 	NSFetchRequest *request = [self createFetchRequestInContext:context];
 	[request setPredicate:searchTerm];
 	[request setPropertiesToFetch:attributes];
-    [request setResultType:NSDictionaryResultType];
+  [request setResultType:NSDictionaryResultType];
 	
 	return [self executeFetchRequestAndReturnFirstObject:request inContext:context];
 }
