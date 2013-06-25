@@ -18,6 +18,8 @@
 + (NSArray *) executeFetchRequest:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context;
 + (id) executeFetchRequestAndReturnFirstObject:(NSFetchRequest *)request;
 + (id) executeFetchRequestAndReturnFirstObject:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context;
++ (NSUInteger) countForFetchRequest: (NSFetchRequest *)request;
++ (NSUInteger) countForFetchRequest: (NSFetchRequest *)request inContext:(NSManagedObjectContext *)context;
 
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 

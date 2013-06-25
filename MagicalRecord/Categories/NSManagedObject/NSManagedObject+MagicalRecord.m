@@ -63,6 +63,30 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 	return [self executeFetchRequestAndReturnFirstObject:request inContext:[NSManagedObjectContext contextForCurrentThread]];
 }
 
+
++ (NSUInteger) countForFetchRequest: (NSFetchRequest *)request inContext:(NSManagedObjectContext *)context
+{
+  __block NSUInteger count = NSNotFound;
+  [context performBlockAndWait:^{
+    
+    NSError *error = nil;
+    
+    count = [context countForFetchRequest:request error:&error];
+    
+    if (count == NSNotFound)
+    {
+      [MagicalRecord handleErrors:error];
+    }
+    
+  }];
+	return count;
+}
+
++ (NSUInteger) countForFetchRequest: (NSFetchRequest *)request
+{
+  return [self countForFetchRequest:request inContext:[NSManagedObjectContext contextForCurrentThread]];
+}
+
 #if TARGET_OS_IPHONE
 
 + (void) performFetch:(NSFetchedResultsController *)controller
