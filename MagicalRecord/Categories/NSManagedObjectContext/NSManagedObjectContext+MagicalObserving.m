@@ -10,6 +10,7 @@
 #import "NSManagedObjectContext+MagicalRecord.h"
 #import "MagicalRecord.h"
 #import "MagicalRecord+iCloud.h"
+#import <objc/runtime.h>
 
 NSString * const kMagicalRecordDidMergeChangesFromiCloudNotification = @"kMagicalRecordDidMergeChangesFromiCloudNotification";
 
@@ -20,29 +21,65 @@ NSString * const kMagicalRecordDidMergeChangesFromiCloudNotification = @"kMagica
 
 - (void) observeContext:(NSManagedObjectContext *)otherContext
 {
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-	[notificationCenter addObserver:self
-                           selector:@selector(mergeChangesFromNotification:)
-                               name:NSManagedObjectContextDidSaveNotification
-                             object:otherContext];
+    __weak typeof(self) weakSelf = self;
+    
+    [self observeContext:otherContext withBlock:^(NSNotification *note) {
+        [weakSelf mergeChangesFromNotification:note];
+    }];
 }
 
 - (void) observeContextOnMainThread:(NSManagedObjectContext *)otherContext
 {
+    __weak typeof(self) weakSelf = self;
+    
+    [self observeContext:otherContext withBlock:^(NSNotification *note) {
+        [weakSelf mergeChangesOnMainThread:note];
+    }];
+}
+- (void)observeContext:(NSManagedObjectContext *)otherContext withBlock:(void (^)(NSNotification *note))block
+{
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-	[notificationCenter addObserver:self
-                           selector:@selector(mergeChangesOnMainThread:)
-                               name:NSManagedObjectContextDidSaveNotification
-                             object:otherContext];
+    id observer = [notificationCenter addObserverForName:NSManagedObjectContextDidSaveNotification object:otherContext queue:nil usingBlock:block];
+    
+    [self setContextSaveObserver:observer forContext:otherContext];
 }
 
 - (void) stopObservingContext:(NSManagedObjectContext *)otherContext
 {
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter removeObserver:[self contextSaveObserverForContext:otherContext]];
 
-	[notificationCenter removeObserver:self
-                                  name:NSManagedObjectContextDidSaveNotification
-                                object:otherContext];
+    [self removeContextSaveObserverForContext:otherContext];
+}
+#pragma mark - Context Observation Properties
+
+static void* kSaveObserverPropertyKey;
+static id observerKeyForContext(NSManagedObjectContext* context) {
+  return @((uint)context);
+}
+
+- (void) setContextSaveObserver:(id)observer forContext:(NSManagedObjectContext*)otherContext
+{
+  self.allContextSaveObservers[observerKeyForContext(otherContext)] = observer;
+}
+- (void) removeContextSaveObserverForContext:(NSManagedObjectContext*)otherContext
+{
+  [self.allContextSaveObservers removeObjectForKey:observerKeyForContext(otherContext)];
+}
+- (id)contextSaveObserverForContext:(NSManagedObjectContext*)otherContext
+{
+  return self.allContextSaveObservers[observerKeyForContext(otherContext)];
+}
+
+- (NSMutableDictionary*)allContextSaveObservers
+{
+  NSMutableDictionary *observers = objc_getAssociatedObject(self, &kSaveObserverPropertyKey);
+  if (!observers)
+  {
+    observers = [NSMutableDictionary dictionary];
+    objc_setAssociatedObject(self, &kSaveObserverPropertyKey, observers, OBJC_ASSOCIATION_RETAIN);
+  }
+  return observers;
 }
 
 #pragma mark - Context iCloud Merge Helpers
