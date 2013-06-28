@@ -51,6 +51,16 @@ NSString * const kMagicalRecordDidMergeChangesFromiCloudNotification = @"kMagica
 
     [self removeContextSaveObserverForContext:otherContext];
 }
+- (void) stopObservingAllContexts
+{
+  NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+  
+  for (id observer in [[self allContextSaveObservers] objectEnumerator])
+      [notificationCenter removeObserver:observer];
+  
+  [[self allContextSaveObservers] removeAllObjects];
+}
+
 #pragma mark - Context Observation Properties
 
 static void* kSaveObserverPropertyKey;
