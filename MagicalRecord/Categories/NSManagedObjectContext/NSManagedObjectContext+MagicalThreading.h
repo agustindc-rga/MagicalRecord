@@ -13,4 +13,6 @@
 + (NSManagedObjectContext *) contextForCurrentThread;
 + (void) resetContextForCurrentThread;
 
+- (NSThread*)thread;
+
 @end

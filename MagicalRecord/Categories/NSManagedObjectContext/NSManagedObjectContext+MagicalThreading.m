@@ -10,6 +10,7 @@
 #import "NSManagedObject+MagicalRecord.h"
 #import "NSManagedObjectContext+MagicalRecord.h"
 #import "NSManagedObjectContext+MagicalObserving.h"
+#import <objc/runtime.h>
 
 static NSString const * kMagicalRecordManagedObjectContextKey = @"MagicalRecord_NSManagedObjectContextForThreadKey";
 
@@ -36,12 +37,26 @@ static NSString const * kMagicalRecordManagedObjectContextKey = @"MagicalRecord_
 		{
       [threadContext stopObservingContext:threadContext.parentContext];
 			threadContext = [self contextWithParent:defaultContext];
+      [threadContext setThread:[NSThread currentThread]];
       [threadContext observeContext:defaultContext];
       
 			[threadDict setObject:threadContext forKey:kMagicalRecordManagedObjectContextKey];
 		}
 		return threadContext;
 	}
+}
+
+#pragma mark - Thread Reference
+
+static void* kThreadPropertyKey;
+
+- (void)setThread:(NSThread*)thread
+{
+  objc_setAssociatedObject(self, &kThreadPropertyKey, thread, OBJC_ASSOCIATION_ASSIGN);
+}
+- (NSThread*)thread
+{
+  return objc_getAssociatedObject(self, &kThreadPropertyKey);
 }
 
 @end
