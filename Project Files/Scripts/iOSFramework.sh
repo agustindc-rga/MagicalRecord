@@ -80,4 +80,4 @@ echo ""
 echo "The framework was built at: $FRAMEWORK_DIR"
 echo ""
 
-open "$FRAMEWORK_BUILD_PATH"
+# open "$FRAMEWORK_BUILD_PATH"
