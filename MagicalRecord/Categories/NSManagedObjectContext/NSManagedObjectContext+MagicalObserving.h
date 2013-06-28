@@ -12,6 +12,7 @@
 
 - (void) observeContext:(NSManagedObjectContext *)otherContext;
 - (void) observeContextOnMainThread:(NSManagedObjectContext *)otherContext;
+- (void) observeContextOnCurrentThread:(NSManagedObjectContext *)otherContext;
 - (void) stopObservingContext:(NSManagedObjectContext *)otherContext;
 - (void) stopObservingAllContexts;
 

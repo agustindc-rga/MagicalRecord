@@ -8,6 +8,7 @@
 
 #import "NSManagedObjectContext+MagicalObserving.h"
 #import "NSManagedObjectContext+MagicalRecord.h"
+#import "NSManagedObjectContext+MagicalThreading.h"
 #import "MagicalRecord.h"
 #import "MagicalRecord+iCloud.h"
 #import <objc/runtime.h>
@@ -36,6 +37,16 @@ NSString * const kMagicalRecordDidMergeChangesFromiCloudNotification = @"kMagica
         [weakSelf mergeChangesOnMainThread:note];
     }];
 }
+
+- (void) observeContextOnCurrentThread:(NSManagedObjectContext *)otherContext
+{
+    __weak typeof(self) weakSelf = self;
+    
+    [self observeContext:otherContext withBlock:^(NSNotification *note) {
+        [weakSelf mergeChangesOnContextThread:note];
+    }];
+}
+
 - (void)observeContext:(NSManagedObjectContext *)otherContext withBlock:(void (^)(NSNotification *note))block
 {
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
@@ -131,6 +142,19 @@ static id observerKeyForContext(NSManagedObjectContext* context) {
 	{
 		[self performSelectorOnMainThread:@selector(mergeChangesFromNotification:) withObject:notification waitUntilDone:YES];
 	}
+}
+
+- (void) mergeChangesOnContextThread:(NSNotification*)notification
+{
+  NSThread *thread = [self thread];
+  if (!thread || thread == [NSThread currentThread])
+  {
+    [self mergeChangesFromNotification:notification];
+  }
+  else
+  {
+    [self performSelector:@selector(mergeChangesFromNotification:) onThread:thread withObject:notification waitUntilDone:NO];
+  }
 }
 
 - (void) observeiCloudChangesInCoordinator:(NSPersistentStoreCoordinator *)coordinator;
