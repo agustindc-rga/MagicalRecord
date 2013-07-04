@@ -165,6 +165,7 @@ static NSString * const kMagicalRecordNSManagedObjectContextWorkingName = @"kNSM
 + (NSManagedObjectContext *) contextWithoutParent;
 {
     NSManagedObjectContext *context = [[self alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [context setUndoManager:nil];
     return context;
 }
 
@@ -172,6 +173,7 @@ static NSString * const kMagicalRecordNSManagedObjectContextWorkingName = @"kNSM
 {
     NSManagedObjectContext *context = [[self alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     [context setParentContext:[self defaultContext]];
+    [context setUndoManager:nil];
     return context;
 }
 
@@ -185,6 +187,7 @@ static NSString * const kMagicalRecordNSManagedObjectContextWorkingName = @"kNSM
 + (NSManagedObjectContext *) newMainQueueContext;
 {
     NSManagedObjectContext *context = [[self alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    [context setUndoManager:nil];
     MRLog(@"Created Main Queue Context: %@", context);
     return context;    
 }
