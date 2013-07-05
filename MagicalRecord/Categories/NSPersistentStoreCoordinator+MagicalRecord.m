@@ -103,9 +103,9 @@ NSString * const kMagicalRecordPSCDidCompleteiCloudSetupNotification = @"kMagica
                 error = nil;
             }
         }
-                
-        [MagicalRecord handleErrors:error];
     }
+    [MagicalRecord handleErrors:error];
+  
     return store;
 }
 
