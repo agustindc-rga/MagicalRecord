@@ -351,54 +351,6 @@
 }
 
 
-+ (NSFetchedResultsController *) fetchAllSortedBy:(NSString *)sortTerm ascending:(BOOL)ascending withPredicate:(NSPredicate *)searchTerm groupBy:(NSString *)groupingKeyPath inContext:(NSManagedObjectContext *)context
-{
-    NSFetchRequest *request = [self requestAllSortedBy:sortTerm
-                                                ascending:ascending
-                                            withPredicate:searchTerm
-                                                inContext:context];
-    
-	NSFetchedResultsController *controller = [self fetchController:request 
-                                                             delegate:nil
-                                                         useFileCache:NO
-                                                            groupedBy:groupingKeyPath
-                                                            inContext:[NSManagedObjectContext contextForCurrentThread]];
-    
-    [self performFetch:controller];
-    return controller;
-}
-
-+ (NSFetchedResultsController *) fetchAllSortedBy:(NSString *)sortTerm ascending:(BOOL)ascending withPredicate:(NSPredicate *)searchTerm groupBy:(NSString *)groupingKeyPath;
-{
-    return [self fetchAllSortedBy:sortTerm
-                           ascending:ascending
-                       withPredicate:searchTerm
-                             groupBy:groupingKeyPath
-                           inContext:[NSManagedObjectContext contextForCurrentThread]];
-}
-
-+ (NSFetchedResultsController *) fetchAllSortedBy:(NSString *)sortTerm ascending:(BOOL)ascending withPredicate:(NSPredicate *)searchTerm groupBy:(NSString *)groupingKeyPath delegate:(id<NSFetchedResultsControllerDelegate>)delegate inContext:(NSManagedObjectContext *)context
-{
-	NSFetchedResultsController *controller = [self fetchAllGroupedBy:groupingKeyPath 
-                                                          withPredicate:searchTerm
-                                                               sortedBy:sortTerm 
-                                                              ascending:ascending
-                                                               delegate:delegate
-                                                              inContext:context];
-	
-	[self performFetch:controller];
-	return controller;
-}
-
-+ (NSFetchedResultsController *) fetchAllSortedBy:(NSString *)sortTerm ascending:(BOOL)ascending withPredicate:(NSPredicate *)searchTerm groupBy:(NSString *)groupingKeyPath delegate:(id<NSFetchedResultsControllerDelegate>)delegate
-{
-	return [self fetchAllSortedBy:sortTerm 
-                           ascending:ascending
-                       withPredicate:searchTerm 
-                             groupBy:groupingKeyPath 
-                            delegate:delegate
-                           inContext:[NSManagedObjectContext contextForCurrentThread]];
-}
 
 #endif
 
