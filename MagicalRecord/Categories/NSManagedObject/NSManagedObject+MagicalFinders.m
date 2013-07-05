@@ -290,6 +290,17 @@
     return controller;
 }
 
+// SIMPLE FETCH
+
++ (NSFetchedResultsController *) fetchAll
+{
+  return [self fetchAllWithDelegate:nil];
+}
++ (NSFetchedResultsController *) fetchAllInContext:(NSManagedObjectContext *)context
+{
+  return [self fetchAllWithDelegate:nil inContext:context];
+}
+
 + (NSFetchedResultsController *) fetchAllWithDelegate:(id<NSFetchedResultsControllerDelegate>)delegate;
 {
     return [self fetchAllWithDelegate:delegate inContext:[NSManagedObjectContext contextForCurrentThread]];

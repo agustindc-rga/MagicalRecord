@@ -57,6 +57,9 @@
 
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 
++ (NSFetchedResultsController *) fetchAll;
++ (NSFetchedResultsController *) fetchAllInContext:(NSManagedObjectContext *)context;
+
 + (NSFetchedResultsController *) fetchAllWithDelegate:(id<NSFetchedResultsControllerDelegate>)delegate;
 + (NSFetchedResultsController *) fetchAllWithDelegate:(id<NSFetchedResultsControllerDelegate>)delegate inContext:(NSManagedObjectContext *)context;
 
